@@ -1,3 +1,3 @@
 # Raconteur
 
-A description of this package.
+:sparkles: Clean, functional Swift  :rocket:
