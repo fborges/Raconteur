@@ -7,19 +7,21 @@
 
 import Foundation
 
-public func add(_ a: Int) -> (Int) -> Int {
-    return { a + $0 }
-}
 
-public func add(_ a: Int, _ b: Int) -> Int {
+
+public func add<N: Numeric>(_ a: N, _ b: N) -> N {
     return a + b
 }
 
-public func add(_ operands: Int...) -> Int {
+public func add<N: Numeric>(_ a: N) -> (N) -> N {
+    return { add(a, $0) }
+}
+
+public func add<N: Numeric>(_ operands: N...) -> N {
     return operands.reduce(0, +)
 }
 
-public func dec(_ a: Int) -> Int {
+public func dec<N: Numeric>(_ a: N) -> N {
     return a - 1
 }
 
@@ -31,11 +33,11 @@ public func divide(_ a: Int, _ b: Int) -> Int {
     return a / b
 }
 
-public func inc(_ a: Int) -> Int {
+public func inc<N: Numeric>(_ a: N) -> N {
     return a + 1
 }
 
-public func mathMod(_ a: Int, _ b: Int) -> Int {
+public func mathMod<T>(_ a: T, _ b: T) -> T where T: Modulable, T: Numeric, T: Comparable {
     if b < 1 {
         return -1
     }
@@ -43,8 +45,8 @@ public func mathMod(_ a: Int, _ b: Int) -> Int {
     return ((a % b) + b) % b
 }
 
-public func mean(_ elements: Int...) -> Int {
-    return elements.reduce(0, +) / elements.count
+public func mean<T>(_ elements: T...) -> Int where T: SignedInteger, T: Divisible {
+    return Int(elements.reduce(0, +)) / elements.count
 }
 
 public func median(_ elements: Int...) -> Int {
@@ -59,38 +61,55 @@ public func median(_ elements: Int...) -> Int {
     }
 }
 
-func modulo(_ a: Int, _ b: Int) -> Int {
+public func modulo<N: Modulable>(_ a: N, _ b: N) -> N {
     return a % b
 }
 
-func modulo(_ a: Int) -> (Int) -> Int {
+public func modulo<N: Modulable>(_ a: N) -> (N) -> N {
     return { modulo(a, $0) }
 }
 
-func multiply(_ a: Int, _ b: Int) -> Int {
+public func multiply<N: Numeric>(_ a: N, _ b: N) -> N {
     return a * b
 }
 
-func multiply(_ a: Int) -> (Int) -> Int {
+public func multiply<N: Numeric>(_ a: N) -> (N) -> N {
     return { multiply(a, $0) }
 }
 
-func negate(_ a: Int) -> Int {
+public func negate<N: SignedNumeric>(_ a: N) -> N {
     return -a
 }
 
-func product(_ elements: Int...) -> Int {
+public func product<N: Numeric>(_ elements: N...) -> N {
     return elements.reduce(1, multiply)
 }
 
-func subtract(_ a: Int, _ b: Int) -> Int {
+public func subtract<N: Numeric>(_ a: N, _ b: N) -> N {
     return a - b
 }
 
-func subtract(_ a: Int) -> (Int) -> Int {
+public func subtract<N: Numeric>(_ a: N) -> (N) -> N {
     return { subtract(a, $0) }
 }
 
-func sum(_ elements: Int...) -> Int {
+public func sum<N: Numeric>(_ elements: N...) -> N {
     return elements.reduce(0, add)
 }
+
+public protocol Modulable {
+    static func %(lhs: Self, rhs: Self) -> Self
+}
+
+public protocol Divisible {
+    static func /(lhs: Self, rhs: Self) -> Self
+}
+
+extension Int: Divisible, Modulable {}
+extension Int8: Divisible, Modulable {}
+extension Int16: Divisible, Modulable {}
+extension Int32: Divisible, Modulable {}
+extension Int64: Divisible, Modulable {}
+extension Float: Divisible {}
+extension Double: Divisible {}
+extension CGFloat: Divisible {}
